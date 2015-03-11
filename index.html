@@ -3,12 +3,14 @@
 <h1>Awesome IRC-Client</h1>
 <div class="conversations">
   <div id="msgs">
+    <div id="note"> Scroll to see new messages</div>
   </div>
 
   <textarea id="text" type="text" autofocus> </textarea>
   <button id="send">Send</button>
 </div>
 <div id="list">
+  <h2>Guests</h2>
   <ul></ul>
 </div>
 
@@ -23,10 +25,12 @@
   var guests = require('./guests');
   var msg = require('./message');
   var messages = [];
+  var scroll = false;
 
   (function(){
+    $('#note').hide();
     $('#text').on('keyup', function(event) {
-      if(event.which == 13) {
+      if(event.which == 13) { //ignore if ''
         say();
       }
     });
@@ -34,12 +38,20 @@
     $('#send').click(function (){
       say();
     });
+
+    $('#msgs').bind('scroll', checkScroll);
   })();
 
   client.addListener('message', function (from, to, message) {
     var message = new msg(from, to, message);
     messages.push(message);
     printMessage();
+    if(scroll){
+      $('#note').show();
+    }
+    else{
+      scrollDown();
+    }
   });
 
   client.on('names#schnitzelwirt', function(nicks) {
@@ -67,7 +79,6 @@
   function printMessage() {
     $('#msgs').append('<div>' + messages[messages.length - 1].from + ': ' +
       messages[messages.length - 1].message + '</div>');
-    $('#msgs').scrollTop($('#msgs').height());
   }
 
   function say() {
@@ -79,7 +90,27 @@
       $('#text').val('');
       printMessage();
     }
-
+    scrollDown();
     $('#text').focus();
   };
+
+  function scrollDown() {
+    $('#msgs').scrollTop($('#msgs').height());
+    $('#note').hide();
+  }
+
+  function checkScroll(e)
+  {
+    var elem = $(e.currentTarget);
+    if (elem[0].scrollHeight - elem.scrollTop() <= elem.outerHeight())
+    {
+      scroll = false;
+      $('#note').hide();
+    }
+    else
+    {
+      scroll = true;
+    }
+
+  }
 </script>

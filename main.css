@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  font-family: sans-serif;
 }
 
 div, input, button {
@@ -14,25 +15,45 @@ h1 {
   right: 0;
   top: 0;
   border: 1 solid black;
-  height: 80vh;
-  width: 20vw;
+  border-left: none;
+  height: 521px;
+  width: 160px;
   float: right;
   overflow-y: scroll;
 }
 
+#list h2 {
+  text-align: center;
+}
+
+#list ul {
+  list-style-type: none;
+}
 #msgs {
-  height: 75vh;
-  width: 80vw;
+  height: 521px;
+  width: 640px;
   overflow-y: scroll;
   float: left;
-  padding: 10px;
   border: 1 solid black;
 }
 
 #msgs div {
-  width: 100%;
+  width: 620px;
   height: auto;
-  margin-bottom: 10px;
+  margin: 10px 10px 10px 10px;
+}
+
+#msgs #note {
+  position: absolute;
+  bottom: 23px;
+  right: 161px;
+  border: 1 solid #425B6D;
+  margin: 0px;
+  padding: 3px;
+  width: auto;
+  color: #425B6D;
+  background: #8EC5ED;
+  font-size: 90%;
 }
 
 #text {
