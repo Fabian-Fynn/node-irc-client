@@ -9,10 +9,8 @@
   <button id="send">Send</button>
 </div>
 <div id="list">
-  <ul>
-  </ul>
+  <ul></ul>
 </div>
-
 
 <script>
   var $ = require('jQuery');
@@ -24,15 +22,18 @@
   });
   var guests = require('./guests');
   var msg = require('./message');
-  // var input = require('./input');
   var messages = [];
 
   (function(){
-    // input.init();
+    $('#text').on('keyup', function(event) {
+      if(event.which == 13) {
+        say();
+      }
+    });
+
     $('#send').click(function (){
       say();
     });
-
   })();
 
   client.addListener('message', function (from, to, message) {
@@ -47,7 +48,6 @@
     }
     guests.printList();
   });
-
 
   client.on('join#schnitzelwirt', function(nick) {
     if(nick != me)
@@ -64,23 +64,22 @@
     console.log('error: ', message);
   });
 
-  function say(to) {
+  function printMessage() {
+    $('#msgs').append('<div>' + messages[messages.length - 1].from + ': ' +
+      messages[messages.length - 1].message + '</div>');
+    $('#msgs').scrollTop($('#msgs').height());
+  }
+
+  function say() {
     var text = $('#text').val();
-    to = channel;
-    if( $('#text').val() != '' ) {
-      client.say("#schnitzelwirt", text);
-      var msg = {from: me, to: to, message: text};
-      messages.push(msg);
+    if( text != '' ) {
+      client.say(channel, text);
+      var message = new msg(me, channel, text);
+      messages.push(message);
       $('#text').val('');
       printMessage();
     }
 
     $('#text').focus();
-  }
-
-  function printMessage() {
-
-    console.log(messages[messages.length - 1]);
-    $('#msgs').append('<div>' + messages[messages.length - 1].from + ': ' + messages[messages.length - 1].message + '</div>');
-  }
+  };
 </script>

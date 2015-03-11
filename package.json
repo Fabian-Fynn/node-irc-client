@@ -1,5 +1,5 @@
 {
-  "name": "MyIRC",
+  "name": "AwesomeIRC-client",
   "version": "1.0.0",
   "description": "",
   "main": "index.html",
@@ -13,11 +13,10 @@
   },
   "window": {
     "title": "Awesome IRC-Client",
-    "icon": "link.png",
     "toolbar": true,
     "frame": true,
-    "width": 1500,
-    "height": 500,
+    "width": 800,
+    "height": 600,
     "position": "mouse",
     "resizable": true
   }

@@ -1,4 +1,3 @@
-// var $ = require('jQuery');
 module.exports = message;
 
 function message(from, to, message) {
