@@ -3,7 +3,7 @@
 <h1>Awesome IRC-Client</h1>
 <div class="conversations">
   <div id="msgs">
-    <div id="note"> Scroll to see new messages</div>
+    <div class="note"> Scroll to see new messages</div>
   </div>
 
   <textarea id="text" type="text" autofocus> </textarea>
@@ -12,24 +12,27 @@
 <div id="list">
   <h2>Guests</h2>
   <ul></ul>
+  <div class="note"> Click name for pm</div>
 </div>
 
 <script>
   var $ = require('jQuery');
   var irc = require("irc");
-  var me = 'ItsaMe';
-  var channel = '#schnitzelwirt';
-  var client = new irc.Client('chat.freenode.org', me, {
-    channels: [channel]
-  });
   var guests = require('./guests');
   var msg = require('./message');
   var messages = [];
   var scroll = false;
+  var channel = '#schnitzelwirt';
 
+  var me = '';
   (function(){
+    while (me == ''){
+      me = prompt("Please enter your name","");
+    }
+
+
     $('#text').val('');
-    $('#note').hide();
+    $('#msgs .note').hide();
     $('#text').on('keyup', function(event) {
       if(event.which == 13 && $('#text').val() != '') {
         say();
@@ -42,46 +45,51 @@
 
     $('#msgs').bind('scroll', checkScroll);
 
-    $('#list ul *').click(function(){
-      alert('this.val()');
-    });
   })();
 
-  client.addListener('message', function (from, to, message) {
-    if(to == channel || to == me){
-      var message = new msg(from, to, message);
-      messages.push(message);
-      printMessage(to);
-      if(scroll){
-        $('#note').show();
+
+    var client = new irc.Client('chat.freenode.org', me, {
+    channels: [channel]
+    });
+
+
+
+
+    client.addListener('message', function (from, to, message) {
+      if(to == channel || to == me){
+        var message = new msg(from, to, message);
+        messages.push(message);
+        printMessage(to);
+        if(scroll){
+          $('#msgs .note').show();
+        }
+        else{
+          scrollDown();
+        }
       }
-      else{
-        scrollDown();
+    });
+
+    client.on('names#schnitzelwirt', function(nicks) {
+      for(var key in nicks) {
+        guests.list.push(key);
       }
-    }
-  });
+      guests.printList();
+    });
 
-  client.on('names#schnitzelwirt', function(nicks) {
-    for(var key in nicks) {
-      guests.list.push(key);
-    }
-    guests.printList();
-  });
+    client.on('join#schnitzelwirt', function(nick) {
+      if(nick != me)
+        guests.list.push(nick);
+      guests.printList();
+    });
 
-  client.on('join#schnitzelwirt', function(nick) {
-    if(nick != me)
-      guests.list.push(nick);
-    guests.printList();
-  });
+    client.on('quit', function(nick) {
+      guests.list.splice(guests.list.indexOf(nick),1);
+      guests.printList();
+    });
 
-  client.on('quit', function(nick) {
-    guests.list.splice(guests.list.indexOf(nick),1);
-    guests.printList();
-  });
-
-  client.addListener('error', function(message) {
-    console.log('error: ', message);
-  });
+    client.addListener('error', function(message) {
+      console.log('error: ', message);
+    });
 
   function printMessage(to) {
     var clss = '';
@@ -119,7 +127,7 @@
 
   function scrollDown() {
     $('#msgs').scrollTop($('#msgs').height());
-    $('#note').hide();
+    $('#msgs .note').hide();
   }
 
   function checkScroll(e)
@@ -128,7 +136,7 @@
     if (elem[0].scrollHeight - elem.scrollTop() <= elem.outerHeight())
     {
       scroll = false;
-      $('#note').hide();
+      $('#msgs .note').hide();
     }
     else
     {

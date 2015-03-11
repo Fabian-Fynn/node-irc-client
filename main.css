@@ -29,6 +29,23 @@ h1 {
 #list ul {
   list-style-type: none;
 }
+
+.note {
+  position: absolute;
+  bottom: 23px;
+  border: 1 solid #425B6D;
+  margin: 0px;
+  padding: 3px;
+  color: #425B6D;
+  background: #8EC5ED;
+  font-size: 90%;
+}
+
+#list .note {
+  margin: 10px;
+  width: 17.6%;
+}
+
 #msgs {
   height: 521px;
   width: 640px;
@@ -47,17 +64,8 @@ h1 {
   color: red;
 }
 
-#msgs #note {
-  position: absolute;
-  bottom: 23px;
-  right: 161px;
-  border: 1 solid #425B6D;
-  margin: 0px;
-  padding: 3px;
-  width: auto;
-  color: #425B6D;
-  background: #8EC5ED;
-  font-size: 90%;
+#msgs .note {
+  width: 77%;
 }
 
 #text {
