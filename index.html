@@ -28,6 +28,7 @@
   var scroll = false;
 
   (function(){
+    $('#text').val('');
     $('#note').hide();
     $('#text').on('keyup', function(event) {
       if(event.which == 13 && $('#text').val() != '') {
@@ -40,6 +41,10 @@
     });
 
     $('#msgs').bind('scroll', checkScroll);
+
+    $('#list ul *').click(function(){
+      alert('this.val()');
+    });
   })();
 
   client.addListener('message', function (from, to, message) {
@@ -96,8 +101,7 @@
     var text = $('#text').val();
     if( text != '' ) {
       if(text.charAt(0) == '@') {
-        var recipient = text.split(' ')[0];
-        to = recipient.replace('@', '');
+        to = text.split(' ')[0].replace('@', '');
       }
       else
       {
