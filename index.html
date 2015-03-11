@@ -30,7 +30,7 @@
   (function(){
     $('#note').hide();
     $('#text').on('keyup', function(event) {
-      if(event.which == 13) { //ignore if ''
+      if(event.which == 13 && $('#text').val() != '') {
         say();
       }
     });
@@ -43,14 +43,16 @@
   })();
 
   client.addListener('message', function (from, to, message) {
-    var message = new msg(from, to, message);
-    messages.push(message);
-    printMessage();
-    if(scroll){
-      $('#note').show();
-    }
-    else{
-      scrollDown();
+    if(to == channel || to == me){
+      var message = new msg(from, to, message);
+      messages.push(message);
+      printMessage(to);
+      if(scroll){
+        $('#note').show();
+      }
+      else{
+        scrollDown();
+      }
     }
   });
 
@@ -76,16 +78,33 @@
     console.log('error: ', message);
   });
 
-  function printMessage() {
-    $('#msgs').append('<div>' + messages[messages.length - 1].from + ': ' +
+  function printMessage(to) {
+    var clss = '';
+    if(to == me){
+      clss = 'private';
+      to = '@' + to + ': ';
+    }
+    else
+    {
+      to = '';
+    }
+    $('#msgs').append('<div class="' + clss + '">' + messages[messages.length - 1].from + ': ' + to +
       messages[messages.length - 1].message + '</div>');
   }
 
   function say() {
     var text = $('#text').val();
     if( text != '' ) {
-      client.say(channel, text);
-      var message = new msg(me, channel, text);
+      if(text.charAt(0) == '@') {
+        var recipient = text.split(' ')[0];
+        to = recipient.replace('@', '');
+      }
+      else
+      {
+        to = channel;
+      }
+      client.say(to, text);
+      var message = new msg(me, to, text);
       messages.push(message);
       $('#text').val('');
       printMessage();

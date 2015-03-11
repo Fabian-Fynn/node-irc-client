@@ -43,6 +43,10 @@ h1 {
   margin: 10px 10px 10px 10px;
 }
 
+.private {
+  color: red;
+}
+
 #msgs #note {
   position: absolute;
   bottom: 23px;
