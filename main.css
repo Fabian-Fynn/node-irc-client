@@ -1,0 +1,60 @@
+body {
+  margin: 0;
+}
+
+div, input, button {
+  box-sizing: border-box;
+}
+
+h1 {
+  margin: 10px;
+}
+
+#list {
+  right: 0;
+  top: 0;
+  border: 1 solid black;
+  height: 80vh;
+  width: 20vw;
+  float: right;
+  overflow-y: scroll;
+}
+
+#msgs {
+  height: 75vh;
+  width: 80vw;
+  overflow-y: scroll;
+  float: left;
+  padding: 10px;
+  border: 1 solid black;
+}
+
+#msgs div {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+#text {
+  width: 70vw;
+  height: 2em;
+  float: left;
+  border: 0 none white;
+  overflow: hidden;
+  padding: 0;
+  outline: none;
+  resize: none;
+  border: 1 solid black;
+}
+
+#send {
+  float: left;
+  height: 2em;
+  width: 10vw;
+}
+
+.conversations {
+  width: 80vw;
+  height: 80vh;
+  float: left;
+}

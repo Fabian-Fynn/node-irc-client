@@ -1,0 +1,86 @@
+<link rel="stylesheet" href="main.css"/>
+
+<h1>Awesome IRC-Client</h1>
+<div class="conversations">
+  <div id="msgs">
+  </div>
+
+  <textarea id="text" type="text" autofocus> </textarea>
+  <button id="send">Send</button>
+</div>
+<div id="list">
+  <ul>
+  </ul>
+</div>
+
+
+<script>
+  var $ = require('jQuery');
+  var irc = require("irc");
+  var me = 'ItsaMe';
+  var channel = '#schnitzelwirt';
+  var client = new irc.Client('chat.freenode.org', me, {
+    channels: [channel]
+  });
+  var guests = require('./guests');
+  var msg = require('./message');
+  // var input = require('./input');
+  var messages = [];
+
+  (function(){
+    // input.init();
+    $('#send').click(function (){
+      say();
+    });
+
+  })();
+
+  client.addListener('message', function (from, to, message) {
+    var message = new msg(from, to, message);
+    messages.push(message);
+    printMessage();
+  });
+
+  client.on('names#schnitzelwirt', function(nicks) {
+    for(var key in nicks) {
+      guests.list.push(key);
+    }
+    guests.printList();
+  });
+
+
+  client.on('join#schnitzelwirt', function(nick) {
+    if(nick != me)
+      guests.list.push(nick);
+    guests.printList();
+  });
+
+  client.on('quit', function(nick) {
+    guests.list.splice(guests.list.indexOf(nick),1);
+    guests.printList();
+  });
+
+  client.addListener('error', function(message) {
+    console.log('error: ', message);
+  });
+
+  function say(to) {
+    var text = $('#text').val();
+    to = channel;
+    if( $('#text').val() != '' ) {
+      client.say("#schnitzelwirt", text);
+      var msg = {from: me, to: to, message: text};
+      messages.push(msg);
+      $('#text').val('');
+      printMessage();
+    }
+
+    $('#text').focus();
+  }
+
+  function printMessage() {
+
+    console.log(messages[messages.length - 1]);
+    $('#msgs').append('<div>' + messages[messages.length - 1].from + ': ' + messages[messages.length - 1].message + '</div>');
+  }
+</script>
