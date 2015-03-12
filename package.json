@@ -1,6 +1,6 @@
 {
   "name": "AwesomeIRC-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.html",
   "scripts": {
@@ -13,11 +13,11 @@
   },
   "window": {
     "title": "Awesome IRC-Client",
-    "toolbar": true,
+    "toolbar": false,
     "frame": true,
     "width": 800,
     "height": 600,
     "position": "mouse",
-    "resizable": true
+    "resizable": false
   }
 }
